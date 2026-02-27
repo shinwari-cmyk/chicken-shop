@@ -1,26 +1,17 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<div class="container mt-5">
-  <div class="row">
-    <div class="col-md-3">
-      <div class="card p-3 shadow">
-        <h4>Admin Dashboard</h4>
-        <ul class="list-group list-group-flush">
-          <a href="{{ route('products.index') }}" class="list-group-item">Products</a>
-          <a href="{{ route('categories.index') }}" class="list-group-item">Categories</a>
-          <a href="{{ route('orders.index') }}" class="list-group-item">Orders</a>
-          <a href="{{ route('orders.history') }}" class="list-group-item">Order History</a>
-        </ul>
-      </div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    {{ __("You're logged in!") }}
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="col-md-9">
-      <div class="card p-4 shadow">
-        <h3>Welcome to Admin Dashboard</h3>
-        <p>Here you will see stats and quick links.</p>
-      </div>
-    </div>
-  </div>
-</div>
-@endsection
+</x-app-layout>
