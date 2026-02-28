@@ -2,176 +2,68 @@
 
 @section('content')
 
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<div class="text-center mb-5">
+    <h2 class="fw-bold" style="color:#1F2937;">
+        🍗 Our Premium Chicken Menu
+    </h2>
+    <p class="text-muted">Fresh, hygienic & ready to cook</p>
+</div>
 
-<style>
-body{
-    font-family: 'Poppins', sans-serif;
-    background: #0f0c29;
-    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-    overflow-x: hidden;
-}
+<div class="row g-4">
+    @foreach($products as $product)
+        <div class="col-lg-4 col-md-6">
+            <div class="card card-modern shadow-sm h-100">
 
-/* Floating background animation */
-body::before{
-    content:'';
-    position:fixed;
-    width:200%;
-    height:200%;
-    background: radial-gradient(circle at 20% 30%, rgba(255,0,150,0.15), transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(0,200,255,0.15), transparent 40%);
-    animation: floatBG 15s infinite alternate;
-    z-index:-1;
-}
+                <!-- Product Image -->
+                <img src="{{ asset('storage/' . $product->image) }}"
+                     class="card-img-top"
+                     style="height:220px; object-fit:cover;"
+                     alt="{{ $product->name }}">
 
-@keyframes floatBG{
-    from{ transform:translate(0,0); }
-    to{ transform:translate(-100px,-50px); }
-}
+                <div class="card-body text-center">
 
-/* Title */
-.menu-title{
-    font-size:2.7rem;
-    font-weight:800;
-    background: linear-gradient(45deg,#ff9966,#ff5e62);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
+                    <!-- Product Name -->
+                    <h5 class="fw-bold" style="color:#1F2937;">
+                        {{ $product->name }}
+                    </h5>
 
-/* Glass Card */
-.glass-card{
-    background: rgba(255,255,255,0.07);
-    backdrop-filter: blur(15px);
-    border-radius:20px;
-    border:1px solid rgba(255,255,255,0.2);
-    transition:all .4s ease;
-    overflow:hidden;
-    opacity:0;
-    transform:translateY(40px);
-    animation: fadeUp .8s forwards;
-}
+                    <!-- Price -->
+                    <p class="fw-semibold mb-3" style="color:#E63946;">
+                        Rs {{ $product->price }} / KG
+                    </p>
 
-.glass-card:hover{
-    transform:translateY(-10px) scale(1.03);
-    box-shadow:0 20px 50px rgba(0,0,0,0.5);
-}
+                    <!-- Weight Input -->
+                    <input type="number"
+                           class="form-control mb-3 text-center"
+                           data-id="{{ $product->id }}"
+                           value="0.5"
+                           step="0.1"
+                           min="0.1">
 
-@keyframes fadeUp{
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
+                    <!-- Buttons -->
+                    <button class="btn btn-accent w-100 mb-2 add-cart"
+                            data-id="{{ $product->id }}">
+                        🛒 Order via Website
+                    </button>
 
-.card-img-top{
-    height:230px;
-    object-fit:cover;
-    transition:transform .5s ease;
-}
-
-.glass-card:hover .card-img-top{
-    transform:scale(1.1);
-}
-
-.product-title{
-    color:#fff;
-    font-weight:600;
-}
-
-.product-price{
-    color:#ffc107;
-    font-weight:600;
-}
-
-.kg-input{
-    border-radius:30px;
-    text-align:center;
-    font-weight:600;
-}
-
-.btn-modern{
-    border-radius:50px;
-    font-weight:600;
-    transition:all .3s ease;
-}
-
-.btn-modern:hover{
-    transform:scale(1.05);
-}
-
-.btn-website{
-    background:linear-gradient(45deg,#2193b0,#6dd5ed);
-    border:none;
-}
-
-.btn-whatsapp{
-    background:linear-gradient(45deg,#25D366,#128C7E);
-    border:none;
-}
-
-/* Toast popup */
-.toast-custom{
-    position:fixed;
-    top:20px;
-    right:20px;
-    background:#28a745;
-    color:#fff;
-    padding:15px 25px;
-    border-radius:30px;
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
-    display:none;
-    z-index:9999;
-}
-</style>
-
-<div class="container py-5">
-    <h2 class="text-center menu-title mb-5">🍗 Luxury Chicken Menu</h2>
-
-    <div class="row g-4">
-        @foreach($products as $index => $product)
-            <div class="col-md-4">
-                <div class="glass-card h-100 text-center p-3"
-                     style="animation-delay: {{ $index * 0.15 }}s;">
-
-                    <img src="{{ asset('storage/' . $product->image) }}"
-                         class="card-img-top rounded-top"
-                         alt="{{ $product->name }}">
-
-                    <div class="mt-3">
-                        <h5 class="product-title">{{ $product->name }}</h5>
-                        <p class="product-price">Rs {{ $product->price }} / KG</p>
-
-                        <input type="number"
-                               class="form-control mb-3 kg-input"
-                               data-id="{{ $product->id }}"
-                               value="0.5"
-                               step="0.1"
-                               min="0.1">
-
-                        <button class="btn btn-modern btn-website text-white w-100 mb-2 add-cart"
-                                data-id="{{ $product->id }}">
-                            🛒 Order via Website
-                        </button>
-
-                        <button class="btn btn-modern btn-whatsapp text-white w-100 whatsapp-btn"
-                                data-id="{{ $product->id }}">
-                            📲 Order via WhatsApp
-                        </button>
-                    </div>
+                    <button class="btn btn-outline-dark w-100 whatsapp-btn"
+                            data-id="{{ $product->id }}">
+                        📲 Order via WhatsApp
+                    </button>
 
                 </div>
             </div>
-        @endforeach
-    </div>
+        </div>
+    @endforeach
 </div>
 
 <!-- Toast -->
-<div class="toast-custom" id="toastMsg">
+<div id="toastMsg"
+     class="position-fixed top-0 end-0 m-4 p-3 rounded shadow"
+     style="background:#E63946; color:white; display:none; z-index:9999;">
     ✅ Added to cart successfully!
 </div>
 
-<meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
@@ -181,19 +73,21 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] =
 function showToast(){
     const toast = document.getElementById('toastMsg');
     toast.style.display = 'block';
-    setTimeout(() => { toast.style.display='none'; }, 2500);
+    setTimeout(() => { toast.style.display='none'; }, 2000);
 }
 
 document.querySelectorAll('.add-cart').forEach(btn=>{
     btn.addEventListener('click',function(){
         const id=this.dataset.id;
-        const weight=parseFloat(document.querySelector(`.kg-input[data-id="${id}"]`).value)||0.5;
+        const weight=parseFloat(
+            document.querySelector(`input[data-id="${id}"]`).value
+        ) || 0.5;
 
         axios.post("{{ url('cart/add') }}/"+id,{weight})
         .then(res=>{
             showToast();
         })
-        .catch(err=>{
+        .catch(()=>{
             alert('Something went wrong');
         });
     });
@@ -202,7 +96,10 @@ document.querySelectorAll('.add-cart').forEach(btn=>{
 document.querySelectorAll('.whatsapp-btn').forEach(btn=>{
     btn.addEventListener('click',function(){
         const id=this.dataset.id;
-        const weight=parseFloat(document.querySelector(`.kg-input[data-id="${id}"]`).value)||0.5;
+        const weight=parseFloat(
+            document.querySelector(`input[data-id="${id}"]`).value
+        ) || 0.5;
+
         const name=prompt('Enter your name');
         const phone=prompt('Enter your phone');
 
@@ -211,7 +108,8 @@ document.querySelectorAll('.whatsapp-btn').forEach(btn=>{
             return;
         }
 
-        window.location.href="{{ url('cart/direct-whatsapp') }}/"+id+"?weight="+weight+"&name="+name+"&phone="+phone;
+        window.location.href="{{ url('cart/direct-whatsapp') }}/"+id+
+            "?weight="+weight+"&name="+name+"&phone="+phone;
     });
 });
 </script>

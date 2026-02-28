@@ -3,11 +3,9 @@
 @section('content')
 
 <!-- ================= HERO ================= -->
-<div class="text-center py-5 mb-5 hero-box">
-  <h1 class="fw-bold display-5 mt-5">🐔 Fresh & Premium Chicken Cuts</h1>
-  <p class="fs-5 mb-0">
-    Always clean, tender, and ready to cook — delivered with love ❤️
-  </p>
+<div class="text-center p-5 mb-5 rounded-4 shadow-sm" style="background:#E63946; color:white;">
+    <h1 class="fw-bold">🐔 Fresh & Premium Chicken Cuts</h1>
+    <p class="mb-0">Always clean, tender, and ready to cook</p>
 </div>
 
 <!-- ================= GALLERY ================= -->
@@ -32,8 +30,7 @@
   <div class="row g-4">
     @foreach($products as $item)
       <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="card product-card border-0 shadow-sm h-100">
-
+        <div class="card card-modern shadow-sm h-100 text-center">
           <!-- BADGE -->
           <span class="product-badge {{ $item['badge'] == 'Best Seller' ? 'badge-best' : 'badge-fresh' }}">
             {{ $item['badge'] }}

@@ -1,37 +1,126 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>CH Chicken Shop</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F8F9FA; /* 60% */
+        }
+
+        /* NAVBAR - 30% */
+        .navbar-custom {
+            background-color: #1F2937;
+        }
+
+        .navbar-custom .nav-link,
+        .navbar-custom .navbar-brand {
+            color: #fff !important;
+            font-weight: 500;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #E63946 !important;
+        }
+
+        /* Accent Buttons - 10% */
+        .btn-accent {
+            background-color: #E63946;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 18px;
+            font-weight: 600;
+            transition: 0.3s ease;
+        }
+
+        .btn-accent:hover {
+            background-color: #c92f3c;
+            transform: scale(1.05);
+        }
+
+        /* Cards */
+        .card-modern {
+            border: none;
+            border-radius: 15px;
+            transition: 0.3s ease;
+        }
+
+        .card-modern:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1F2937;
+            color: #fff;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+    </style>
 </head>
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-        <!-- Navigation -->
-        @include('layouts.navigation')
+<body>
 
-        <!-- Page Heading -->
-        @if (isset($header))
-            <header class="bg-white dark:bg-gray-800 shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endif
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-custom shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ route('home') }}">
+            🐔 CH Shop
+        </a>
 
-        <!-- Page Content -->
-        <main>
-            @yield('content')
-        </main>
+        <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            ☰
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('home') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('menu') }}">Menu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('cart.checkout') }}">Cart</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('contact') }}">Contact</a>
+                </li>
+
+                @auth
+                    <li class="nav-item">
+                        <a class="nav-link text-warning" href="{{ route('dashboard') }}">Dashboard</a>
+                    </li>
+                @endauth
+            </ul>
+        </div>
     </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="container py-5">
+    @yield('content')
+</div>
+
+<!-- FOOTER -->
+<footer class="text-center">
+    <div class="container">
+        © {{ date('Y') }} CH Chicken Shop — Fresh & Premium Quality
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -7,8 +7,7 @@
     <a href="{{ route('products.create') }}" class="btn btn-primary">+ Add New Product</a>
 </div>
 
-<table class="table table-bordered table-hover">
-    <thead class="table-dark">
+<table class="table table-striped table-hover shadow-sm rounded-3 overflow-hidden">    <thead style="background:#1F2937; color:white;">
         <tr>
             <th>ID</th>
             <th>Image</th>
