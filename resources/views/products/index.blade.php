@@ -57,8 +57,8 @@
 
             <td>
                 <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{{ route('product_rates.create', $product->id) }}" class="btn btn-success btn-sm">Add Rate</a>
-            </td>
+<a href="{{ route('product_rates.create', $product->id) }}" 
+   class="btn btn-success btn-sm">Add Rate</a>            </td>
         </tr>
         @endforeach
     </tbody>

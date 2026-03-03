@@ -101,7 +101,7 @@
 
                 @auth
                     <li class="nav-item">
-                        <a class="nav-link text-warning" href="{{ route('dashboard') }}">Dashboard</a>
+                       <a class="nav-link text-warning" href="{{ route('admin.dashboard') }}">Dashboard</a>
                     </li>
                 @endauth
             </ul>
