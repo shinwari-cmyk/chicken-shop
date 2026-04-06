@@ -2,115 +2,233 @@
 
 @section('content')
 
-<!-- ================= HERO ================= -->
-<div class="text-center p-5 mb-5 rounded-4 shadow-sm" style="background:#E63946; color:white;">
-    <h1 class="fw-bold">🐔 Fresh & Premium Chicken Cuts</h1>
-    <p class="mb-0">Always clean, tender, and ready to cook</p>
-</div>
+@php
+use Illuminate\Support\Facades\File;
 
-<!-- ================= GALLERY ================= -->
-<div class="container">
-  <h2 class="text-center text-danger fw-bold mb-4">
-    Our Fresh Meat Collection 🍗
-  </h2>
+$images = File::exists(public_path('images'))
+    ? collect(File::files(public_path('images')))->filter(function ($file) {
+        return in_array(strtolower($file->getExtension()), ['jpg','jpeg','png','webp']);
+    })
+    : collect([]);
+@endphp
 
-  @php
-    $products = [
-      ['file'=>'raw.jpg','name'=>'Whole Raw Chicken','badge'=>'Fresh'],
-      ['file'=>'breast.jpeg','name'=>'Chicken Breast','badge'=>'Best Seller'],
-      ['file'=>'drumstick.jpeg','name'=>'Drumsticks','badge'=>'Fresh'],
-      ['file'=>'karahi.jpeg','name'=>'Karahi Cut','badge'=>'Best Seller'],
-      ['file'=>'boneless.jpeg','name'=>'Boneless Breast','badge'=>'Fresh'],
-      ['file'=>'handi.jpeg','name'=>'Boneless Handi Cut','badge'=>'Fresh'],
-      ['file'=>'wings.jpeg','name'=>'Chicken Wings','badge'=>'Best Seller'],
-      ['file'=>'qeema.jpeg','name'=>'Chicken Qeema','badge'=>'Fresh'],
-    ];
-  @endphp
+<!-- FULL WIDTH HERO SLIDER -->
+<div class="hero-container">
 
-  <div class="row g-4">
-    @foreach($products as $item)
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="card card-modern shadow-sm h-100 text-center">
-          <!-- BADGE -->
-          <span class="product-badge {{ $item['badge'] == 'Best Seller' ? 'badge-best' : 'badge-fresh' }}">
-            {{ $item['badge'] }}
-          </span>
+    @if($images->count() > 0)
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <!-- carousel auto slides every 3 seconds -->
 
-          <!-- IMAGE -->
-          <img
-            src="{{ asset('storage/products/images/' . $item['file']) }}"
-            class="product-image"
-            alt="{{ $item['name'] }}"
-          >
+        <div class="carousel-inner">
+            @foreach($images as $index => $img)
+            <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                <div class="hero-slide">
+                    <img src="{{ asset('images/' . $img->getFilename()) }}" class="hero-img">
 
-          <div class="card-body text-center">
-            <h6 class="fw-bold text-danger mb-0">
-              {{ $item['name'] }}
-            </h6>
-          </div>
+                    <!-- Overlay Content -->
+                    <div class="hero-overlay">
+                        <h1>Fresh Chicken Everyday</h1>
+                        <p>Clean • Hygienic • Premium Quality</p>
+                        <a href="{{ route('menu') }}" class="btn btn-accent mt-3">
+                            View Menu
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
         </div>
-      </div>
-    @endforeach
-  </div>
+
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+
+    </div>
+    @endif
+
 </div>
+
+<!-- CATEGORIES -->
+<div class="container py-5">
+    <h2 class="text-center text-danger fw-bold mb-4">Shop by Category 🍗</h2>
+
+    <input type="text" id="categorySearch" class="form-control mb-4" placeholder="Search categories...">
+
+    <div class="row g-4">
+        @foreach($categories as $category)
+        <div class="col-lg-3 col-md-4 col-sm-6 category-card">
+            <div class="card category-box text-center p-4">
+                <h5 class="fw-bold">{{ $category->name }}</h5>
+                <a href="{{ route('menu', ['category' => $category->id]) }}" class="btn btn-outline-danger btn-sm mt-2">
+                    View
+                </a>
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+<!-- CONTACT SECTION -->
+<div class="container py-5" id="contact">
+    <h2 class="text-center text-danger fw-bold mb-4">Contact Us 📞</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm p-4 contact-card">
+                <h5 class="fw-bold text-center mb-3">Get in Touch</h5>
+                <p class="text-center">Have questions or want to place a special order? Contact us directly!</p>
+
+                <ul class="list-unstyled mb-3">
+                    <li><strong>Phone:</strong> +92 3170097125</li>
+                    <li><strong>Email:</strong> info@chickenshop.com</li>
+                    <li><strong>Address:</strong> Noorchohk, AbbottabadCity, Pakistan</li>
+                </ul>
+
+                <!-- BUTTON TO CONTACT PAGE -->
+                <div class="text-center">
+                    <a href="{{ route('contact') }}" class="btn btn-accent btn-lg">
+                        Send Message / Go to Contact
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
+.contact-card {
+    border-radius: 15px;
+    transition: 0.3s;
+    text-align: center;
+}
+.contact-card:hover {
+    transform: scale(1.02);
+}
+.contact-card ul li {
+    margin: 8px 0;
+}
+.btn-accent {
+    background: #E63946;
+    color: #fff;
+    border-radius: 30px;
+    padding: 10px 25px;
+    font-weight: 600;
+}
+.btn-accent:hover {
+    background: #D62828;
+}
+</style>   
+
+<!-- FEATURED -->
+@if(isset($featuredProducts) && $featuredProducts->count())
+<div class="container pb-5">
+    <h2 class="text-center text-danger fw-bold mb-4">Featured Products 🍗</h2>
+
+    <div class="row g-4">
+        @foreach($featuredProducts as $product)
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="card product-box text-center">
+
+                @if($product->image)
+                <img src="{{ asset('storage/' . $product->image) }}" class="product-img">
+                @endif
+
+                <div class="card-body">
+                    <h6 class="fw-bold text-danger">{{ $product->name }}</h6>
+                    <p>Rs {{ $product->price }} / KG</p>
+                </div>
+
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+@endif
+
+<!-- SEARCH JS -->
+<script>
+document.getElementById('categorySearch').addEventListener('input', function(){
+    let val = this.value.toLowerCase();
+    document.querySelectorAll('.category-card').forEach(card=>{
+        card.style.display = card.innerText.toLowerCase().includes(val) ? '' : 'none';
+    });
+});
+</script>
+
+<!-- STYLES -->
+<style>
+
+/* 60-30-10 COLORS */
+body {
+    background: #F8F9FA; /* 60% light */
+}
+
 /* HERO */
-.hero-box {
-  background: linear-gradient(45deg, #dc3545, #ff9a3c);
-  color: #fff;
-  border-radius: 20px;
+.hero-container {
+    width: 100%;
+    margin-top: -40px;
 }
 
-/* PRODUCT CARD */
-.product-card {
-  position: relative;
-  border-radius: 16px;
-  overflow: hidden;
-  transition: transform .25s ease, box-shadow .25s ease;
+.hero-slide {
+    position: relative;
 }
 
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0,0,0,.15);
+.hero-img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
 }
 
-/* IMAGE – SAME SIZE */
-.product-image {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
+/* DARK OVERLAY */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5); /* 30% dark */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-/* BADGE BASE */
-.product-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  padding: 6px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #fff;
-  border-radius: 30px;
-  opacity: 0;
-  transform: translateY(-5px);
-  transition: all .3s ease;
-  z-index: 2;
+/* ACCENT */
+.btn-accent {
+    background: #E63946; /* 10% red */
+    color: #fff;
+    border-radius: 30px;
+    padding: 8px 20px;
 }
 
-/* SHOW ON HOVER */
-.product-card:hover .product-badge {
-  opacity: 1;
-  transform: translateY(0);
+/* CATEGORY */
+.category-box {
+    border-radius: 15px;
+    transition: 0.3s;
 }
 
-/* BADGE COLORS */
-.badge-fresh {
-  background: linear-gradient(45deg, #28a745, #5ddf8d);
+.category-box:hover {
+    transform: translateY(-5px);
 }
 
-.badge-best {
-  background: linear-gradient(45deg, #ffc107, #ff8f00);
-  color: #000;
+/* PRODUCTS */
+.product-img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-box:hover {
+    transform: scale(1.05);
+    transition: 0.3s;
+}
+
+/* REMOVE DEFAULT FOOTER */
+footer {
+    display: none;
 }
 
 </style>

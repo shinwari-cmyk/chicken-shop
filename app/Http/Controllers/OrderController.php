@@ -15,15 +15,14 @@ class OrderController extends Controller
     }
 
     // 📦 All Orders History (Website + WhatsApp)
-    public function history()
-    {
-        $orders = Order::with(['details', 'items'])
-            ->latest()
-            ->get();
+   public function history()
+{
+    $orders = Order::with(['details','items'])
+        ->latest()
+        ->get();
 
-        return view('orders.history', compact('orders'));
-    }
-
+    return view('admin.orders.index', compact('orders'));
+}
     // 🧾 Invoice page
     public function invoice(Order $order)
     {

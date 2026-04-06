@@ -1,86 +1,102 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
-    <div class="card shadow-lg glass-card mx-auto" style="max-width: 800px;">
-        <div class="card-body">
-            <div class="text-center mb-4">
-                <h3 class="text-danger fw-bold">🧾 Order Invoice</h3>
-                <small class="text-muted">Order #: {{ $order->order_number }}</small>
-            </div>
 
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <p><strong>Customer:</strong> {{ $order->details->customer_name ?? 'N/A' }}</p>
-                    <p><strong>Phone:</strong> {{ $order->details->phone ?? 'N/A' }}</p>
-                    <p><strong>Email:</strong> {{ $order->email ?? '-' }}</p>
-                </div>
-                <div class="col-md-6">
-                    <p><strong>Location:</strong> {{ $order->details->address ?? '-' }}</p>
-                    <p><strong>Status:</strong> 
-                        <span class="badge 
-                            @if($order->status == 'pending') bg-warning text-dark
-                            @elseif($order->status == 'completed') bg-success
-                            @elseif($order->status == 'cancelled') bg-danger
-                            @else bg-secondary
-                            @endif">
-                            {{ ucfirst($order->status) }}
-                        </span>
-                    </p>
-                    <p><strong>Grand Total:</strong> Rs {{ $order->grand_total }}</p>
-                </div>
-            </div>
+<div class="no-print text-center mt-4">
+    <button onclick="window.print()" class="btn btn-danger">
+        🖨️ Print Receipt
+    </button>
+</div>
 
-            <hr>
+@php
+use Illuminate\Support\Str;
 
-            <h5 class="mb-3">Items</h5>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Item</th>
-                            <th>Rate / KG</th>
-                            <th>Weight (KG)</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($order->items as $item)
-                        <tr>
-                            <td>{{ $item->product_name }}</td>
-                            <td>Rs {{ $item->unit_price }}</td>
-                            <td>{{ $item->weight }}</td>
-                            <td>Rs {{ $item->total_price }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+function line($left, $right = '') {
+    $width = 32;
+    $left = substr($left, 0, $width);
+    $space = $width - strlen($left) - strlen($right);
+    return $left . str_repeat(' ', max(1, $space)) . $right;
+}
+@endphp
 
-            <div class="text-center mt-4">
-                <button onclick="window.print()" class="btn btn-danger btn-lg">
-                    🖨️ Print Invoice
-                </button>
-            </div>
-        </div>
-    </div>
+<div id="printable">
+
+<pre class="receipt">
+      CHICKEN SHOP
+        Abbottabad
+--------------------------------
+Order: {{ $order->order_number }}
+Date: {{ $order->created_at->format('d-m-Y H:i') }}
+--------------------------------
+Customer: {{ $order->details->customer_name ?? '-' }}
+Phone: {{ $order->details->phone ?? '-' }}
+--------------------------------
+{{ line('Item','Total') }}
+--------------------------------
+@foreach($order->items as $item)
+{{ line(Str::limit($item->product_name,16)) }}
+{{ line($item->weight.'kg x '.$item->unit_price, number_format($item->total_price,0)) }}
+@endforeach
+--------------------------------
+{{ line('Grand Total', number_format($order->grand_total,0)) }}
+--------------------------------
+
+        Thank You
+       Visit Again
+</pre>
+
 </div>
 
 <style>
-/* Glassmorphism effect */
-.glass-card {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.3);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+/* RECEIPT */
+.receipt{
+    width: 72mm;
+    margin: 0;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.4;
 }
-.glass-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+
+/* PRINT FIX */
+@media print{
+
+    @page{
+        size: 72mm auto;
+        margin: 0;
+    }
+
+    html, body{
+        margin: 0;
+        padding: 0;
+        height: auto;
+    }
+
+    body *{
+        visibility: hidden;
+    }
+
+    #printable, #printable *{
+        visibility: visible;
+    }
+
+    #printable{
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block; /* 🔥 key fix */
+    }
+
+    .receipt{
+        width: 72mm;
+        display: inline-block; /* 🔥 key fix */
+    }
+
+    .no-print{
+        display: none;
+    }
 }
-table th, table td {
-    vertical-align: middle;
-}
+
 </style>
+
 @endsection
