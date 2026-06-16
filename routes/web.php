@@ -8,15 +8,17 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductRateController;
 use App\Http\Controllers\OrderController;
+use Illuminate\Support\Facades\File;
+
 
 /*
 |--------------------------------------------------------------------------
-| PUBLIC ROUTES (NO LOGIN)
+| PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
 
 Route::get('/', [PageController::class, 'home'])->name('home');
-Route::get('/home', [PageController::class, 'home']); // optional
+Route::get('/home', [PageController::class, 'home']);
 Route::get('/menu', [PageController::class, 'menu'])->name('menu');
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -24,7 +26,7 @@ Route::post('/contact/send', [ContactController::class, 'store'])->name('contact
 
 /*
 |--------------------------------------------------------------------------
-| CART ROUTES (NO LOGIN)
+| CART ROUTES
 |--------------------------------------------------------------------------
 */
 
@@ -37,26 +39,23 @@ Route::get('/cart/direct-whatsapp/{id}', [CartController::class, 'directWhatsApp
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN PANEL (LOGIN REQUIRED)
+| ADMIN PANEL
 |--------------------------------------------------------------------------
+|
+| Auth middleware removed.
+| Add your own admin protection later if needed.
+|
 */
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::prefix('admin')->group(function () {
 
-    // Dashboard
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
-    // Products & Categories
     Route::resource('products', ProductController::class);
     Route::resource('categories', CategoryController::class);
 
-    /*
-    |--------------------------------------------------------------------------
-    | PRODUCT RATES (Nested under product)
-    |--------------------------------------------------------------------------
-    */
     Route::get('products/{product}/rates', [ProductRateController::class, 'index'])->name('product_rates.index');
     Route::get('products/{product}/rates/create', [ProductRateController::class, 'create'])->name('product_rates.create');
     Route::post('products/{product}/rates', [ProductRateController::class, 'store'])->name('product_rates.store');
@@ -64,16 +63,21 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('rates/{rate}', [ProductRateController::class, 'update'])->name('product_rates.update');
     Route::delete('rates/{rate}', [ProductRateController::class, 'destroy'])->name('product_rates.destroy');
 
-    /*
-    |--------------------------------------------------------------------------
-    | ORDERS
-    |--------------------------------------------------------------------------
-    */
     Route::get('/orders', [OrderController::class, 'history'])->name('orders.index');
     Route::get('/orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit');
     Route::put('/orders/{order}', [OrderController::class, 'updateStatus'])->name('orders.update');
     Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice'])->name('orders.invoice');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
-});
+});   
 
-require __DIR__.'/auth.php';
+Route::get('/shared_storage/{path}', function ($path) {
+
+    $file = public_path('../shared_storage/' . $path);
+
+    if (!File::exists($file)) {
+        abort(404);
+    }
+
+    return response()->file($file);
+
+})->where('path', '.*');

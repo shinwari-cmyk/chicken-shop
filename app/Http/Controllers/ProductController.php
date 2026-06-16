@@ -5,13 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['category', 'rates'])->get(); 
-        return view('products.index', compact('products'));
+        $products = Product::with(['category', 'rates'])->get();
+
+foreach ($products as $product) {
+
+    // FORCE correct URL
+    if ($product->image) {
+        $product->image = asset('storage/' . $product->image);
+    }
+}
     }
 
     public function create()
@@ -23,19 +31,28 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'        => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
-            'price'       => 'required|numeric',
+            'price' => 'required|numeric',
             'tax_percent' => 'nullable|numeric',
-            'image'       => 'nullable|image',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,jfif,webp|max:2048',
             'description' => 'nullable|string'
         ]);
 
         $tax = $data['tax_percent'] ?? 0;
         $data['final_price'] = $data['price'] + ($data['price'] * $tax / 100);
 
+        // IMAGE UPLOAD
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
+
+            $image = $request->file('image');
+
+            $filename = time().'_'.str_replace(' ', '_', strtolower($data['name']))
+                .'.'.$image->getClientOriginalExtension();
+
+            $image->storeAs('products', $filename, 'public');
+
+            $data['image'] = 'products/' . $filename;
         }
 
         Product::create($data);
@@ -53,31 +70,33 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $data = $request->validate([
-            'name'        => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
-            'price'       => 'required|numeric',
+            'price' => 'required|numeric',
             'tax_percent' => 'nullable|numeric',
-            'image'       => 'nullable|image',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,jfif,webp|max:2048',
             'description' => 'nullable|string'
         ]);
 
         $tax = $data['tax_percent'] ?? 0;
         $data['final_price'] = $data['price'] + ($data['price'] * $tax / 100);
 
-      if ($request->hasFile('image')) {
+        // IMAGE UPDATE
+        if ($request->hasFile('image')) {
 
-    $image = $request->file('image');
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
+            }
 
-    // create clean name
-    $filename = time() . '_' . strtolower(str_replace(' ', '_', $data['name'])) . '.' . $image->getClientOriginalExtension();
+            $image = $request->file('image');
 
-    // store in storage/app/public/products/images
-    $image->storeAs('products/images', $filename, 'public');
+            $filename = time().'_'.str_replace(' ', '_', strtolower($data['name']))
+                .'.'.$image->getClientOriginalExtension();
 
-    $data['image'] = 'products/images/' . $filename;
-}
+            $image->storeAs('products', $filename, 'public');
 
-
+            $data['image'] = 'products/' . $filename;
+        }
 
         $product->update($data);
 
@@ -87,8 +106,8 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        if ($product->image) {
-            \Storage::disk('public')->delete($product->image);
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
         }
 
         $product->delete();

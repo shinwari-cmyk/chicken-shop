@@ -43,11 +43,17 @@ footer { background-color:#1F2937; color:#fff; padding:20px 0; margin-top:50px; 
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('menu') }}">Menu</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('cart.checkout') }}">Cart</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Contact</a></li>
-                @auth
-                    <li class="nav-item"><a class="nav-link text-warning" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                @endauth
+<li class="nav-item">
+    <a class="nav-link position-relative" href="{{ route('cart.checkout') }}">
+        🛒 Cart
+
+        <span id="cart-count"
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{ session('cart') ? count(session('cart')) : 0 }}
+        </span>
+    </a>
+</li>                <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Contact</a></li>
+               
             </ul>
         </div>
     </div>
