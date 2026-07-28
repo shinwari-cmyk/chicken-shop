@@ -62,10 +62,6 @@ footer { background-color:#1F2937; color:#fff; padding:20px 0; margin-top:50px; 
 <!-- CONTENT -->
 <div class="container py-5">@yield('content')</div>
 
-<!-- FOOTER -->
-<footer class="text-center">
-    <div class="container">© {{ date('Y') }} CH Chicken Shop — Fresh & Premium Quality</div>
-</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

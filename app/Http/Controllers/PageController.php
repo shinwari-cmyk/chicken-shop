@@ -30,9 +30,9 @@ class PageController extends Controller
         $category_id = $request->query('category');
 
         // Fetch products by category if selected, otherwise all products
-        $products = $category_id
-            ? Product::where('category_id', $category_id)->get()
-            : Product::all();
+       $products = $category_id
+    ? Product::with('activeRate')->where('category_id', $category_id)->get()
+    : Product::with('activeRate')->get();
 
         // Get all categories for filter dropdown
         $categories = Category::orderBy('name')->get();

@@ -39,8 +39,7 @@
                     </h5>
 
                     <p class="fw-semibold mb-3 text-danger">
-                        Rs {{ $product->price }} / KG
-                    </p>
+Rs {{ $product->activeRate->price ?? $product->final_price }} / KG                 </p>
 
                     <input type="number"
                            class="form-control mb-3 text-center"

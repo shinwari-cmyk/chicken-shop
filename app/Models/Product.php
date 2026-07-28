@@ -26,9 +26,11 @@ class Product extends Model
         return $this->hasMany(ProductRate::class, 'product_id');
     }
 
-    public function activeRate()
+   public function activeRate()
 {
-    return $this->hasOne(ProductRate::class)->latest();
+    return $this->hasOne(ProductRate::class)
+                ->where('active', 1)
+                ->latestOfMany();
 }
 
 
