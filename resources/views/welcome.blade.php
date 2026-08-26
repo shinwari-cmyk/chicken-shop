@@ -30,8 +30,8 @@
         'drumsticks.jpg',
         'boneless_handi.jpg',
         'boneless_breast.jpg',
-        'wings.jpg'
-      ];
+        'wings.jpg',
+        'drumstick.jpeg'      ];
     @endphp
 
     @foreach($images as $img)

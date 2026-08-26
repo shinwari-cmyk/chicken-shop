@@ -16,6 +16,7 @@ class ContactController extends Controller
     }
 
     public function store(Request $request)
+    
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -30,8 +31,8 @@ class ContactController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        Mail::to('admin@example.com')->send(
-    new ContactMessageMail($request->only('name','email','message'))
+       Mail::to('shinwarig513@gmail.com')->send(
+    new ContactMessageMail($request->only('name', 'email', 'message'))
 );
 
 

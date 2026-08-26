@@ -15,7 +15,7 @@
         <a href="{{ route('menu', ['category' => $category->id]) }}"
            class="btn btn-outline-dark btn-sm me-2">
            {{ $category->name }}
-        </a>
+        </a>   
     @endforeach
 </div>
 

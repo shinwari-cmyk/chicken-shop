@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>CH Chicken Shop</title>
+<title>AWAMI Chicken Shop</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <style>
 body { font-family: 'Poppins', sans-serif; background-color: #F8F9FA; }
 
@@ -37,7 +37,7 @@ footer { background-color:#1F2937; color:#fff; padding:20px 0; margin-top:50px; 
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-custom shadow-sm">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ route('home') }}">🐔 CH Shop</a>
+        <a class="navbar-brand fw-bold" href="{{ route('home') }}">🐔 AWAMI Chicken Shop </a>
         <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">☰</button>
         <div class="collapse navbar-collapse" id="navMenu">
             <ul class="navbar-nav ms-auto">
